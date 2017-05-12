@@ -31,6 +31,7 @@ import java.awt.Image;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -38,6 +39,7 @@ import javax.imageio.ImageIO;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import net.runelite.api.Client;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.menus.MenuManager;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.ui.ClientUI;
@@ -50,7 +52,7 @@ public class RuneLite
 	private static final Logger logger = LoggerFactory.getLogger(RuneLite.class);
 
 	public static final File RUNELITE_DIR = new File(System.getProperty("user.home"), ".runelite");
-	public static final File REPO_DIR = new File(RUNELITE_DIR, "repository");
+	public static final File SETTINGS_FILE = new File(RUNELITE_DIR, "settings.properties");
 
 	public static Image ICON;
 
@@ -66,6 +68,7 @@ public class RuneLite
 	private EventBus eventBus = new EventBus(this::eventExceptionHandler);
 	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(4);
 	private final WSClient wsclient = new WSClient();
+	private final ConfigManager configManager = new ConfigManager(SETTINGS_FILE);
 
 	static
 	{
@@ -98,6 +101,15 @@ public class RuneLite
 		gui = new ClientUI();
 
 		setupTrayIcon();
+
+		try
+		{
+			configManager.load();
+		}
+		catch (FileNotFoundException ex)
+		{
+			// ok
+		}
 
 		eventBus.register(menuManager);
 
@@ -187,5 +199,10 @@ public class RuneLite
 	public static TrayIcon getTrayIcon()
 	{
 		return trayIcon;
+	}
+
+	public ConfigManager getConfigManager()
+	{
+		return configManager;
 	}
 }

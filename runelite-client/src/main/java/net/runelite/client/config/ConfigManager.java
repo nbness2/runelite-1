@@ -109,10 +109,12 @@ public class ConfigManager
 			throw new IllegalArgumentException("Not a config group");
 		}
 
-		List<ConfigItem> items = Arrays.stream(inter.getMethods())
+		List<ConfigItemDescriptor> items = Arrays.stream(inter.getMethods())
 			.filter(m -> m.getParameterCount() == 0)
-			.map(m -> m.getDeclaredAnnotation(ConfigItem.class))
-			.filter(Objects::nonNull)
+			.map(m -> new ConfigItemDescriptor(
+				m.getDeclaredAnnotation(ConfigItem.class),
+				m.getReturnType()
+			))
 			.collect(Collectors.toList());
 		return new ConfigDescriptor(group, items);
 	}

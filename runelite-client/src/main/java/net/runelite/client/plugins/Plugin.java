@@ -42,4 +42,9 @@ public abstract class Plugin extends AbstractIdleService
 		Overlay overlay = getOverlay();
 		return overlay != null ? Arrays.asList(overlay) : Collections.EMPTY_LIST;
 	}
+
+	public Object getConfig()
+	{
+		return null;
+	}
 }

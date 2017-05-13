@@ -31,7 +31,7 @@ public class ConfigDescriptor
 	private final ConfigGroup group;
 	private final Collection<ConfigItemDescriptor> items;
 
-	public ConfigDescriptor(ConfigGroup group, Collection items)
+	public ConfigDescriptor(ConfigGroup group, Collection<ConfigItemDescriptor> items)
 	{
 		this.group = group;
 		this.items = items;
